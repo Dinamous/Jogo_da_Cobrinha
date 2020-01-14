@@ -1,0 +1,23 @@
+#canvas{
+    background-color: rgb(37, 37, 37);
+    margin-left: 15%;
+}
+
+h3{
+    text-align: center;
+    font-size: 2rem;
+    color: black;
+}
+
+.centro {
+    margin: auto;
+    width: 50%;
+    background-color: rgb(219, 217, 215);
+    padding: 10px;
+    border-radius: 5%;
+  }
+
+body{
+    background-color: rgb(244, 242, 240);
+    
+}
