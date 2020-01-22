@@ -1,4 +1,6 @@
 
+
+//variaveis globais
 var canvas 
 var context 
 var largura 
@@ -8,6 +10,8 @@ var direcao
 var comida
 var pontuacao
 var cobrarray
+var velocidade
+
 // =======================================
 var barra = document.getElementById('barra');
 
@@ -15,24 +19,27 @@ function Aumenta_Barra(){
 	barra.value +=1;
 }
 
-
+//jquery para iniciar o jogo
 $("#botao").click(function(){
+	barra.value = 0;
 	console.log("aaaaaaa")
 	 canvas = $('#canvas')[0];
 	 context = canvas.getContext('2d');
 	 largura = $('#canvas').width();
 	 altura = $('#canvas').height();	
 	 tam_quadro = 15;
-	 
+	 velocidade = 170
+
+	 document.getElementById("vitoria").style.display = "none";
 	start()
 });
  
  
 	function Cria_Cobra(){
-		var tam_cobra = 2;
+		var tam_cobra = 3;
 		cobrarray = [];
 		for(var m = 0; m < tam_cobra; m++){
-			cobrarray.push({x: 45, y: 14});//posição inicial em q a cobra surgirá
+			cobrarray.push({x: 15, y: 0});//posição inicial em q a cobra surgirá
 		}
 	}
  
@@ -47,7 +54,8 @@ $("#botao").click(function(){
 	function config(){
  
 		Cor_fundo();
- 
+
+ 		//pop x e y, guardam as coordenadas no canvas em q a cabeça está
 		var pop_x = cobrarray[0].x;
 		var pop_y = cobrarray[0].y;
  
@@ -67,13 +75,24 @@ $("#botao").click(function(){
 		}
  
  
-		if(pop_x == -1 || pop_x == largura / tam_quadro || pop_y == -1 || pop_y == altura / tam_quadro || Colidiu(pop_x, pop_y, cobrarray)){
-			start();
+		if(pop_x == -1 || pop_x == 27 || pop_y == -1 || pop_y == 27 || Colidiu(pop_x, pop_y, cobrarray)){
+			
+			// caso ultrapasse os limites
+			barra.value = 0;
+			Perdeu();
+			//start();
 			return;
 		}
  
 		if(pop_x == comida.x && pop_y == comida.y){//se colidiu com a comida
 			var cobra_rabo = {x: pop_x, y: pop_y};
+			velocidade= velocidade - 10;
+			
+			if(barra.value==100){
+				Ganhou();
+				return;
+			}
+
 			Aumenta_Barra();
 			// adicioa na barra 
 			Cria_Comida();
@@ -93,7 +112,7 @@ $("#botao").click(function(){
 		}
  
 		//FAz a comida aparecer
-		Corpo_Cobra(comida.x, comida.y);
+		Spawna_Comida(comida.x, comida.y);
  
 		
 	}
@@ -108,6 +127,13 @@ $("#botao").click(function(){
  
 	function Corpo_Cobra(x, y){
 		context.fillStyle = "#209CCE";
+		context.fillRect(x * tam_quadro, y * tam_quadro, tam_quadro, tam_quadro);
+		context.strokeStyle = "#000000";	
+		context.strokeRect(x * tam_quadro, y * tam_quadro, tam_quadro, tam_quadro);
+	}
+
+	function Spawna_Comida(x, y){
+		context.fillStyle = "#E76E55";
 		context.fillRect(x * tam_quadro, y * tam_quadro, tam_quadro, tam_quadro);
 		context.strokeStyle = "#000000";	
 		context.strokeRect(x * tam_quadro, y * tam_quadro, tam_quadro, tam_quadro);
@@ -140,16 +166,26 @@ $("#botao").click(function(){
  
 
 function start(){
-	direcao = "left";
+	direcao = "down";
 	Cria_Cobra();
 	Cria_Comida();
 	pontuacao = 0;
 
 
-	
+	console.log(velocidade);
 	if(typeof game_start != "undefined")clearInterval(game_start);
-	game_start = setInterval(config, 100);
+	game_start = setInterval(config, 150);
 	
 
 	
+}
+
+function Perdeu(){
+	document.getElementById("vitoria").style.display = "flex";
+	document.getElementById("vitoria").innerHTML = "Que pena, você perdeu :(";
+}
+
+function Ganhou(){
+	document.getElementById("vitoria").style.display = "flex";
+	document.getElementById("vitoria").innerHTML = "Parabéns, você finalizou o jogo :)";
 }
