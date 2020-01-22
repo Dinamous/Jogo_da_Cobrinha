@@ -30,6 +30,7 @@ $("#botao").click(function(){
 	 tam_quadro = 15;
 	 velocidade = 170
 
+	 document.getElementById("canvas").style.display = "flex";
 	 document.getElementById("vitoria").style.display = "none";
 	start()
 });
@@ -182,6 +183,7 @@ function start(){
 
 function Perdeu(){
 	document.getElementById("vitoria").style.display = "flex";
+	document.getElementById("canvas").style.display = "none";
 	document.getElementById("vitoria").innerHTML = "Que pena, você perdeu :(";
 }
 
